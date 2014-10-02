@@ -1,0 +1,428 @@
+<html>
+  
+  <head>
+    <title>00:00</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link 
+      href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' 
+      rel='stylesheet' 
+      type='text/css'>
+      
+    <style>
+    
+      *, *::after {
+        box-sizing: border-box;
+        font-family: Helvetica, sans-serif;
+      }
+      
+      /* begin clock styling */
+      .clockface {
+        width: 500px;
+        height: 500px;
+        border: thick solid black;
+        border-radius: 300px;
+        position:absolute;
+        top:50%;
+        left:30%;
+        margin-top:-250px;
+        margin-left: -250px;
+      }
+      
+      .three, .six, .nine, .twelve {
+        position: absolute;
+        background-color: black;
+      }
+      
+      .three {
+        height: 4px;
+        width: 30px;
+        right: 2px;
+        top:50%;
+        margin-top: -2px;
+      }
+      
+      .six {
+        height: 30px;
+        width: 4px;
+        bottom: 2px;
+        left:50%;
+        margin-left: -2px;
+      }
+      
+      .nine {
+        height: 4px;
+        width: 30px;
+        left: 2px;
+        top:50%;
+        margin-top: -2px;
+      }
+      
+      .twelve {
+        height: 30px;
+        width: 4px;
+        top: 2px;
+        left:50%;
+        margin-left: -2px;
+      }
+      
+      .middle-dot {
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:20px;
+        height:20px;
+        margin-left:-10px;
+        margin-top:-10px;
+        background-color: black;
+        border-radius:10px;
+        z-index: 6;
+      }
+      
+      #second-hand {
+        width: 2px;
+        height: 58%;
+        background-color: red;
+        transform-origin: 50% 82.5%;
+        position:absolute;
+        
+        bottom: 40%;
+        left: 50%;
+        margin-left: -1px;
+        border-radius: 1px;
+        z-index:5;
+      }
+      
+      #second-hand::after {
+        position:absolute;
+        top:100%;
+        left: 50%;
+        width:20px;
+        height: 20px;
+        border: 2px solid red;
+        content: '';
+        margin-left:-10px;
+        margin-top: -1px;
+        border-radius: 10px;
+      }
+      
+      /* begin inlay styling */
+      .inlay {
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
+        border: 2px solid black;
+        top: 50px;
+        left: 50%;
+        margin-left: -65px;
+        position: absolute;
+      }
+      
+      #minute-hand {
+        height: 60px;
+        width: 2px;
+        background-color: black;
+        transform-origin: 50% 100%;
+        position:absolute;
+        bottom:50%;
+        left: 50%;
+        margin-left: -1px;
+        z-index:3;
+        
+      }
+      
+      .five, .ten, .fifteen, .slice {
+        position: absolute;
+        -moz-border-radius: 65px; 
+        -webkit-border-radius: 65px; 
+        -o-border-radius: 65px; 
+        border-radius: 65px; 
+        left:0;
+        top:0;
+        bottom:0;
+        right:0;
+      }
+      
+      .five, .ten, .fifteen {
+        clip: rect(0px, 130px, 130px, 63px);
+      }
+      
+      .slice {
+         clip: rect(0px, 63px, 130px, 0px);
+         transform: rotateZ(120deg);
+         
+       }
+      
+      .ten {
+        transform: rotateZ(120deg);
+      }
+      
+      .fifteen {
+        transform: rotateZ(240deg);
+      }
+      
+      .five .slice {
+        background-color: lightseagreen;
+      }
+      .ten .slice {
+        background-color: peachpuff;
+      }
+      .fifteen .slice {
+        background-color: tomato;
+      }
+      
+      .inlay span {
+        color: white;
+        font-size: 3em;
+        position:absolute;
+        z-index:3;
+
+        font-weight: 400;
+        font-family: 'La Belle Aurore', cursive;
+        line-height: 1em;
+      }
+      
+      .number-five {
+        top: 18%;
+        right: 18%;
+      }
+      
+      .number-fifteen {
+        top: 18%;
+        left: 10%;
+      }
+      
+      .number-ten {
+        bottom: 0%;
+        left: 37%;
+      }
+      /* end inlay styling */
+      
+      
+      /* begin button styling */
+      .start, .reset {
+        display:table-cell;
+        vertical-align:middle;
+        position: absolute;
+        top:50%;
+        color: black;
+        font-size: 1.6em;
+        background-color: white;
+        height:120px;
+        width: 120px;
+        border: 2px solid black;
+        border-radius: 60px;
+        margin-top: -38px;
+      }
+      
+      .start:hover, .reset:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 0 0 #cecece;
+      }
+      
+      .start:active, .reset:active {
+        transform: translateY(3px);
+        box-shadow: 0 -1px 0 0 #cecece;
+      }
+      
+      .start {
+        left: 15%;
+      }
+      
+      .reset {
+        right: 15%;
+      }
+      
+      button { outline: none; }
+      /* end button styling */
+      
+    
+    
+      .pro-tips {
+        position: absolute;
+        left: 50%;
+        top:0;
+        bottom:0;
+        padding:20px;
+        overflow: auto
+      }
+      
+      .pro-tips ul, .pro-tips ol {
+        padding-left: 25px;
+        padding-right: 25px;
+/*        margin:0;*/
+      }
+      
+      .tip b {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    
+  
+    
+    <div class='clockface'>
+      
+      <button class='start'>START</button>
+      <button class='reset'>RESET</button>
+      
+      <div class='middle-dot'></div>
+      <div class='three'></div>
+      <div class='six'></div>
+      <div class='nine'></div>
+      <div class='twelve'></div>
+      
+      <div class='inlay'>
+        <span class='number-five'>5</span>
+        <span class='number-ten'>10</span>
+        <span class='number-fifteen'>15</span>
+        
+        <div class='five'><div class='slice'></div></div>
+        <div class='ten'><div class='slice'></div></div>
+        <div class='fifteen'><div class='slice'></div></div>
+        
+        <div id='minute-hand'></div>
+      </div>
+      
+      <div id='second-hand'></div>
+    </div>
+    
+    <div class='pro-tips'>
+      <h1>Pairing Pro-Tips</h1>
+      <ol>
+        <li class='tip'>
+          <h3>Brush your teeth.</h3>
+          We're in close quarters here.
+        </li>
+        <li class='tip'>
+          <h3>Shower.</h3>
+          See Pro-Tip #1.
+        </li>
+        <li class='tip'>
+          <h3>Follow the timer.</h3> 
+          Make sure to switch every fifteen minutes.</li>
+        <li class='tip'>
+          <h3>It's not a race.</h3> 
+          It's more important for both partners to <em>understand</em> the material than to complete the day's assignments before 6:00.
+        </li>
+        
+        <li class='tip'>
+          <h3>Ask 'Why?'</h3> 
+          If you don't understand why something works / doesn't work, 
+          pause and get clarification from your partner. 
+          <br>If you are both unsure, ask your TA :)
+        </li>
+        
+        <li class='tip'>
+          <h3>NEVER STEAL A LEARNING OPPORTUNITY.</h3>
+        </li>
+        
+        <li class='tip'>
+          <h3>Don't touch the keyboard.</h3>
+          ...if you're not the driver. 
+          <br>Learn to talk through your ideas. 
+          <br>Love to talk through your ideas.
+        </li>
+        
+        <li class='tip'>
+          <h3>Make it work, then make it work better.</h3> 
+        </li>
+        
+        <li class='tip'>
+          <h3>Premature optimization is the enemy.</h3> 
+        </li>
+        
+        <li class='tip'>
+          <h3>Listen to Ned.</h3> 
+        </li>
+        
+        <li class='tip'>
+          <h3>No seriously, brush your teeth.</h3> 
+        </li>
+        
+        <li class='tip'>
+          <h3>Improve your Google-Fu.</h3> 
+        </li>
+        
+        <li class='tip'>
+          <h3>Be patient.</h3> 
+        </li>
+
+        <li class='tip'>
+          <h3>There's no "I" in Pair</h3>
+          Use 'we' and 'us' when discussing work you've done, or plan to do.
+        </li>
+       
+      </ol>
+      
+    </div>
+    
+    <div style='position:absolute;bottom:2px;left:0;right:0;text-align:center;'>
+      by andrew richards <a href='http://www.drwrchrds.com'>site</a> 
+      <a href='http://twitter.com/drwrchrds'>@drwrchrds</a>
+      <a href='http://github.com/drwrchrds'>github</a> 
+      <a href='http://linkedin.com/in/drwrchrds'>linkedin</a>
+    </div>
+    
+    <script>
+      var fifteenMinTimeout, oneSecondInterval, started = false;
+      
+      var startTimer = function(reset) {
+        if(!started || reset) {
+          started = true
+          $title = $('title');
+          $secondHand = $('#second-hand');
+          $minuteHand = $('#minute-hand');
+ 
+          if(fifteenMinTimeout) {
+            clearTimeout(fifteenMinTimeout);
+            clearInterval(oneSecondInterval);
+          }
+        
+          fifteenMinTimeout = setTimeout(function() {
+            alert("Time's up!")
+          }, 900000);
+        
+          var seconds = 0;
+          oneSecondInterval = setInterval(function() {
+            seconds += 1;
+            updateSecondHand(seconds);
+            updateMinuteHand(seconds);
+            updateDisplay(seconds);
+          }, 1000);        
+        }
+      }
+      
+      var updateDisplay = function(seconds) {
+        var secDisplay = seconds % 60;
+        var minDisplay = parseInt(seconds / 60);
+        secDisplay = secDisplay < 10 ? '0' + secDisplay : secDisplay;
+        minDisplay = minDisplay < 10 ? '0' + minDisplay : minDisplay;
+        
+        $title.text(minDisplay + ':' + secDisplay);
+      }
+      
+      var updateSecondHand = function(seconds) {
+        $secondHand.css('transform', 'rotateZ(' + (seconds * 6) + 'deg)')
+      }
+      
+      var updateMinuteHand = function(seconds) {
+        $minuteHand.css('transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
+      }
+      
+      var resetTimer = function() {
+        if(started) {
+          updateSecondHand(0);
+          updateMinuteHand(0);
+          updateDisplay(0);
+          startTimer(true);          
+        }
+      }
+      
+      $(function() {
+        $('.start').on('click', startTimer.bind({}, false));
+        $('.reset').on('click', resetTimer);
+      })
+    </script>
+  </body>
+</html>
