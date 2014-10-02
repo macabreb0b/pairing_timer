@@ -149,7 +149,6 @@
       .slice {
          clip: rect(0px, 63px, 130px, 0px);
          transform: rotateZ(120deg);
-         
        }
       
       .ten {
@@ -242,19 +241,66 @@
         left: 50%;
         top:0;
         bottom:0;
+        right:0;
         padding:20px;
-        overflow: auto
       }
       
-      .pro-tips ul, .pro-tips ol {
-        padding-left: 25px;
-        padding-right: 25px;
-/*        margin:0;*/
+      .pro-tips h1 {
+        text-align:center;
       }
       
-      .tip b {
-        display: block;
+      .tips-holder {
+        position:absolute;
+        top:57px;
+        bottom:57px;
+        left:20px;
+        right:20px;
+        overflow:hidden;
       }
+      
+      .tips {
+        position:absolute;
+        height:100%;
+        top:100%;
+        right:0;
+        left:0;
+        
+        transition: top 1s ease-out;
+      }
+      
+      .tip {
+        height:100%;
+        width:100%;
+        display:table;
+        position:relative;
+      }
+      
+      .tip::before {
+        content: 'Tip\A#' attr(num);
+        color: white;
+        /* width: 100px; */
+        /* height: 100px; */
+        background-color: orange;
+        border-radius: 92px;
+        display: inline-block;
+        /* text-align: center; */
+        font-size: 2em;
+        font-weight: 700;
+        font-style: italic;
+        transform: rotateZ(20deg);
+        position: absolute;
+        right: 5px;
+        white-space: pre;
+        padding: 24px 32px;
+        line-height: 35px;
+      }
+      
+      .tip > div {
+        display:table-cell;
+        vertical-align:middle;
+      }
+      
+      
     </style>
   </head>
   <body>
@@ -289,75 +335,113 @@
     
     <div class='pro-tips'>
       <h1>Pairing Pro-Tips</h1>
-      <ol>
-        <li class='tip'>
-          <h3>Brush your teeth.</h3>
-          We're in close quarters here.
-        </li>
-        <li class='tip'>
-          <h3>Shower.</h3>
-          See Pro-Tip #1.
-        </li>
-        <li class='tip'>
-          <h3>Follow the timer.</h3> 
-          Make sure to switch every fifteen minutes.</li>
-        <li class='tip'>
-          <h3>It's not a race.</h3> 
-          It's more important for both partners to <em>understand</em> 
-          the material than to complete the day's assignments before 6:00.
-        </li>
+      
+      <div class='tips-holder'>
+        <ol class='tips'>
+          <li class='tip'>
+            <div>
+                <h3>Brush your teeth.</h3>
+                We're in close quarters here.
+            </div>
+          </li>
+          
+          <li class='tip'>
+            <div>
+              <h3>Shower.</h3>
+              See Pro-Tip #1.
+            </div>
+          </li>
+          
+          <li class='tip'>
+            <div>
+              <h3>Follow the timer.</h3> 
+              Make sure to switch every fifteen minutes.
+            </div>
+          </li>
+          
+          <li class='tip'>
+            <div>
+              <h3>It's not a race.</h3> 
+              It's more important for both partners to <em>understand</em> 
+              the material than to complete the day's assignments before 6:00.
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Ask 'Why?'</h3> 
-          If you don't understand why something works / doesn't work, 
-          pause and get clarification from your partner. 
-          <br>If you are both unsure, ask your TA :)
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Ask 'Why?'</h3> 
+              If you don't understand why something works / doesn't work, 
+              pause and get clarification from your partner. 
+              <br>If you are both unsure, ask your TA :)
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>NEVER STEAL A LEARNING OPPORTUNITY.</h3>
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>NEVER STEAL A LEARNING OPPORTUNITY.</h3>
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Don't touch the keyboard.</h3>
-          ...if you're not the driver. 
-          <br>Learn to talk through your ideas. 
-          <br>Love to talk through your ideas.
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Don't touch the keyboard.</h3>
+              ...if you're not the driver. 
+              <br>Learn to talk through your ideas. 
+              <br>Love to talk through your ideas.
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Make it work, then make it work better.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Make it work, then make it work better.</h3> 
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Premature optimization is the enemy.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Premature optimization is the enemy.</h3> 
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Teaching your partner helps the both of you to learn.</h3>
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Teaching your partner helps the both of you to learn.</h3>
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Listen to Ned.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Listen to Ned.</h3> 
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>No seriously, brush your teeth.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>No seriously, brush your teeth.</h3> 
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Improve your Google-Fu.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Improve your Google-Fu.</h3> 
+            </div>
+          </li>
         
-        <li class='tip'>
-          <h3>Be patient.</h3> 
-        </li>
+          <li class='tip'>
+            <div>
+              <h3>Be patient.</h3> 
+            </div>
+          </li>
 
-        <li class='tip'>
-          <h3>There's no "I" in Pair</h3>
-          Use 'we' and 'us' when discussing work you've done, or plan to do.
-        </li>
-      </ol>
+          <li class='tip'>
+            <div>
+              <h3>There's no "I" in Pair</h3>
+              Use 'we' and 'us' when discussing work you've done, or plan to do.
+            </div>
+          </li>
+        </ol>
+      </div>
+      
     </div>
     
     <div style='position:absolute;bottom:2px;left:0;right:0;text-align:center;'>
@@ -373,29 +457,28 @@
       var startTimer = function(reset) {
         if(!started || reset) {
           started = true
+          
+          showRandomTip();
+          
           $title = $('title');
           $secondHand = $('#second-hand');
           $minuteHand = $('#minute-hand');
- 
-          if(fifteenMinTimeout) {
-            clearTimeout(fifteenMinTimeout);
-            clearInterval(oneSecondInterval);
-          }
-        
-          fifteenMinTimeout = setTimeout(function() {
-            alert("Time's up!")
-          }, 900000);
         
           var start = new Date();
           oneSecondInterval = setInterval(function() {
             var now = new Date();
             var seconds = parseInt((now - start)/1000);
-            updateSecondHand(seconds);
-            updateMinuteHand(seconds);
-            updateDisplay(seconds);
+            if(seconds >= 900000) {
+              clearInterval(oneSecondInterval);
+              alert("Time's Up!");     
+            } else {
+              updateSecondHand(seconds);
+              updateMinuteHand(seconds);
+              updateDisplay(seconds);   
+            }
           }, 1000);        
         }
-      }
+      };
       
       var updateDisplay = function(seconds) {
         var secDisplay = seconds % 60;
@@ -404,26 +487,42 @@
         minDisplay = minDisplay < 10 ? '0' + minDisplay : minDisplay;
         
         $title.text(minDisplay + ':' + secDisplay);
-      }
+      };
       
       var updateSecondHand = function(seconds) {
         $secondHand.css('transform', 'rotateZ(' + (seconds * 6) + 'deg)')
-      }
+      };
       
       var updateMinuteHand = function(seconds) {
         $minuteHand.css('transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
-      }
+      };
       
       var resetTimer = function() {
         if(started) {
+          clearInterval(oneSecondInterval);
+          
           updateSecondHand(0);
           updateMinuteHand(0);
           updateDisplay(0);
-          startTimer(true);          
+          
+          startTimer(true);
         }
+      };
+      
+      var showRandomTip = function() {
+        var $tips = $('.tips');
+        var numTips = $tips.children().length;
+        var randTip = Math.floor(Math.random() * numTips);
+        
+        $tips.css('top', (randTip * -100) + '%');
       }
       
       $(function() {
+        
+        $('.tip').each(function(idx, tip) {
+          $(tip).attr('num', idx + 1);
+        })
+        
         $('.start').on('click', startTimer.bind({}, false));
         $('.reset').on('click', resetTimer);
       })
