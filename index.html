@@ -303,7 +303,8 @@
           Make sure to switch every fifteen minutes.</li>
         <li class='tip'>
           <h3>It's not a race.</h3> 
-          It's more important for both partners to <em>understand</em> the material than to complete the day's assignments before 6:00.
+          It's more important for both partners to <em>understand</em> 
+          the material than to complete the day's assignments before 6:00.
         </li>
         
         <li class='tip'>
@@ -333,6 +334,10 @@
         </li>
         
         <li class='tip'>
+          <h3>Teaching your partner helps the both of you to learn.</h3>
+        </li>
+        
+        <li class='tip'>
           <h3>Listen to Ned.</h3> 
         </li>
         
@@ -352,9 +357,7 @@
           <h3>There's no "I" in Pair</h3>
           Use 'we' and 'us' when discussing work you've done, or plan to do.
         </li>
-       
       </ol>
-      
     </div>
     
     <div style='position:absolute;bottom:2px;left:0;right:0;text-align:center;'>
@@ -383,9 +386,10 @@
             alert("Time's up!")
           }, 900000);
         
-          var seconds = 0;
+          var start = new Date();
           oneSecondInterval = setInterval(function() {
-            seconds += 1;
+            var now = new Date();
+            var seconds = parseInt((now - start)/1000);
             updateSecondHand(seconds);
             updateMinuteHand(seconds);
             updateDisplay(seconds);
