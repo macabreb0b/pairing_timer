@@ -468,7 +468,7 @@
           oneSecondInterval = setInterval(function() {
             var now = new Date();
             var seconds = parseInt((now - start)/1000);
-            if(seconds >= 900000) {
+            if(seconds >= 900) {
               clearInterval(oneSecondInterval);
               alert("Time's Up!");     
             } else {
@@ -476,7 +476,7 @@
               updateMinuteHand(seconds);
               updateDisplay(seconds);   
             }
-          }, 1000);        
+          }, 300);        
         }
       };
       
