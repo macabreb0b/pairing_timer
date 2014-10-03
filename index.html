@@ -242,7 +242,8 @@
         top:0;
         bottom:0;
         right:0;
-        padding:20px;
+        padding-left:20px;
+        padding-right:20px;
       }
       
       .pro-tips h1 {
@@ -286,13 +287,54 @@
         /* text-align: center; */
         font-size: 2em;
         font-weight: 700;
-        font-style: italic;
+/*        font-style: italic;*/
         transform: rotateZ(20deg);
         position: absolute;
         right: 5px;
         white-space: pre;
         padding: 24px 32px;
         line-height: 35px;
+        overflow:hidden;
+        text-shadow: chocolate 1px 1px 0,
+          chocolate 2px 2px 0,
+          chocolate 3px 3px 0,
+          chocolate 4px 4px 0,
+          chocolate 5px 5px 0,
+          chocolate 6px 6px 0,
+          chocolate 7px 7px 0,
+          chocolate 8px 8px 0,
+          chocolate 9px 9px 0,
+          chocolate 10px 10px 0,
+          chocolate 11px 11px 0,
+          chocolate 12px 12px 0,
+          chocolate 13px 13px 0,
+          chocolate 14px 14px 0,
+          chocolate 15px 15px 0,
+          chocolate 16px 16px 0,
+          chocolate 17px 17px 0,
+          chocolate 18px 18px 0,
+          chocolate 19px 19px 0,
+          chocolate 20px 20px 0,
+          chocolate 21px 21px 0,
+          chocolate 22px 22px 0,
+          chocolate 23px 23px 0,
+          chocolate 24px 24px 0,
+          chocolate 25px 25px 0,
+          chocolate 26px 26px 0,
+          chocolate 27px 27px 0,
+          chocolate 28px 28px 0,
+          chocolate 29px 29px 0,
+          chocolate 30px 30px 0,
+          chocolate 31px 31px 0,
+          chocolate 32px 32px 0,
+          chocolate 33px 33px 0,
+          chocolate 34px 34px 0,
+          chocolate 35px 35px 0,
+          chocolate 36px 36px 0,
+          chocolate 37px 37px 0,
+          chocolate 38px 38px 0,
+          chocolate 39px 39px 0
+          ;
       }
       
       .tip > div {
@@ -372,7 +414,7 @@
               <h3>Ask 'Why?'</h3> 
               If you don't understand why something works / doesn't work, 
               pause and get clarification from your partner. 
-              <br>If you are both unsure, ask your TA :)
+              <br><br>If you are both unsure, ask your TA :)
             </div>
           </li>
         
@@ -384,10 +426,10 @@
         
           <li class='tip'>
             <div>
-              <h3>Don't touch the keyboard.</h3>
+              <h3>Don't touch the keyboard...</h3>
               ...if you're not the driver. 
-              <br>Learn to talk through your ideas. 
-              <br>Love to talk through your ideas.
+              <br><br>Learn to talk through your ideas. 
+              <br><br>Love to talk through your ideas.
             </div>
           </li>
         
@@ -418,6 +460,8 @@
           <li class='tip'>
             <div>
               <h3>No seriously, brush your teeth.</h3> 
+              You might enjoy coffee and cigarettes.
+              <br><br>Your partner might not.
             </div>
           </li>
         
@@ -509,12 +553,19 @@
         }
       };
       
+      var lastTip;
       var showRandomTip = function() {
+        
         var $tips = $('.tips');
         var numTips = $tips.children().length;
         var randTip = Math.floor(Math.random() * numTips);
         
-        $tips.css('top', (randTip * -100) + '%');
+        if(randTip === lastTip) {
+          showRandomTip();
+        } else {          
+          $tips.css('top', (randTip * -100) + '%');
+          lastTip = randTip;
+        }
       }
       
       $(function() {
