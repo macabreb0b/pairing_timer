@@ -567,10 +567,12 @@
       
       var updateSecondHand = function(seconds) {
         $secondHand.css('transform', 'rotateZ(' + (seconds * 6) + 'deg)')
+        $secondHand.css('-webkit-transform', 'rotateZ(' + (seconds * 6) + 'deg)')
       };
       
       var updateMinuteHand = function(seconds) {
         $minuteHand.css('transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
+        $minuteHand.css('-webkit-transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
       };
       
       var resetTimer = function() {
