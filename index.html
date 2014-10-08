@@ -694,7 +694,9 @@
           $(tip).attr('num', idx + 1);
         })
         
-        $('.start').on('click', startTimer.bind({}, new Date(), false));
+        $('.start').on('click', startTimer.bind({}, function() {
+          return new Date();
+        }, false));
         $('.reset').on('click', resetTimer);
         $('.short-timer').on('click', shortTimer);
       })
