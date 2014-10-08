@@ -135,6 +135,10 @@
         position: absolute;
       }
       
+      .short-timer * {
+        cursor: pointer;
+      }
+      
       #minute-hand {
         height: 60px;
         width: 2px;
@@ -148,7 +152,17 @@
         left: 50%;
         margin-left: -1px;
         z-index:3;
-        
+      }
+      
+      #minute-hand::after {
+        position:absolute;
+        width:8px;
+        height:8px;
+        background-color:black;
+        border-radius:4px;
+        content: '';
+        bottom:-4px;
+        left:-3px;
       }
       
       .five, .ten, .fifteen, .slice {
@@ -272,6 +286,7 @@
       
     
     
+      /* begin tip styling */
       .pro-tips {
         position: absolute;
         left: 50%;
@@ -380,7 +395,9 @@
         display:table-cell;
         vertical-align:middle;
       }
+      /* end tip styling */
       
+
       
     </style>
   </head>
@@ -400,13 +417,21 @@
       <div class='twelve'></div>
       
       <div class='inlay'>
-        <span class='number-five'>5</span>
-        <span class='number-ten'>10</span>
-        <span class='number-fifteen'>15</span>
         
-        <div class='five'><div class='slice'></div></div>
-        <div class='ten'><div class='slice'></div></div>
-        <div class='fifteen'><div class='slice'></div></div>
+        <div class='short-timer'>
+          <span class='number-five'>5</span>
+          <div class='five' data-min='5'><div class='slice'></div></div>
+        </div>
+        
+        <div class='short-timer'>          
+          <span class='number-ten'>10</span>
+          <div class='ten' data-min='10'><div class='slice'></div></div>
+        </div>
+        
+        <div class='short-timer'>
+          <span class='number-fifteen'>15</span>
+          <div class='fifteen' data-min='15'><div class='slice'></div></div>
+        </div>
         
         <div id='minute-hand'></div>
       </div>
@@ -565,8 +590,12 @@
     <script>
       var fifteenMinTimeout, oneSecondInterval, started = false;
       
-      var startTimer = function(reset) {
+      var startTimer = function(start, reset) {
         if(!started || reset) {
+          if(typeof oneSecondInterval !== 'undefined') {
+            clearInterval(oneSecondInterval);
+          }
+          
           started = true
           
           showRandomTip();
@@ -575,19 +604,19 @@
           $secondHand = $('#second-hand');
           $minuteHand = $('#minute-hand');
         
-          var start = new Date();
           oneSecondInterval = setInterval(function() {
             var now = new Date();
             var seconds = parseInt((now - start)/1000);
+            
+            updateSecondHand(seconds);
+            updateMinuteHand(seconds);
+            updateDisplay(seconds);  
+            
             if(seconds >= 900) {
               clearInterval(oneSecondInterval);
               alert("Time's Up!");     
-            } else {
-              updateSecondHand(seconds);
-              updateMinuteHand(seconds);
-              updateDisplay(seconds);   
             }
-          }, 300);        
+          }, 300);
         }
       };
       
@@ -618,9 +647,27 @@
           updateMinuteHand(0);
           updateDisplay(0);
           
-          startTimer(true);
+          startTimer(new Date(), true);
         }
       };
+      
+      var shortTimer = function(event) {
+        var minutes = $(event.currentTarget).children('div')
+              .first().data('min');
+        switch(minutes) {
+        case 5:
+          var tenMinutesIn = new Date(new Date().getTime() - 10 * 60000);
+          startTimer(tenMinutesIn, true);
+          break;
+        case 10:
+          var fiveMinutesIn = new Date(new Date().getTime() - 5 * 60000);
+          startTimer(fiveMinutesIn, true);
+          break;
+        case 15:
+          startTimer(new Date(), true);
+          break;
+        }
+      }
       
       var lastTip;
       var showRandomTip = function() {
@@ -643,8 +690,9 @@
           $(tip).attr('num', idx + 1);
         })
         
-        $('.start').on('click', startTimer.bind({}, false));
+        $('.start').on('click', startTimer.bind({}, new Date(), false));
         $('.reset').on('click', resetTimer);
+        $('.short-timer').on('click', shortTimer);
       })
     </script>
   </body>
