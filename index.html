@@ -643,6 +643,10 @@
         $minuteHand.css('-webkit-transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
       };
       
+      var longTimer = function() {
+        startTimer(new Date(), false);
+      };
+      
       var resetTimer = function() {
         if(started) {
           clearInterval(oneSecondInterval);
@@ -694,9 +698,7 @@
           $(tip).attr('num', idx + 1);
         })
         
-        $('.start').on('click', startTimer.bind({}, function() {
-          return new Date();
-        }, false));
+        $('.start').on('click', longTimer);
         $('.reset').on('click', resetTimer);
         $('.short-timer').on('click', shortTimer);
       })
