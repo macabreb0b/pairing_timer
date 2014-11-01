@@ -300,12 +300,6 @@
         right: 15%;
       }
 
-      .reset.disabled {
-        color: grey;
-        pointer-events: none;
-        background-color: lightgrey;
-      }
-
       button { outline: none; }
       /* end button styling */
       
@@ -433,7 +427,7 @@
     <div class='clockface'>
       
       <button class='start'></button>
-      <button class='reset disabled'>Reset</button>
+      <button class='reset'>Reset</button>
       
       <div class='middle-dot'></div>
       <div class='three'></div>
@@ -443,19 +437,19 @@
       
       <div class='inlay'>
         
-        <div class='short-timer'>
+        <div class='short-timer' data-min='5'>
           <span class='number-five'>5</span>
-          <div class='five' data-min='5'><div class='slice'></div></div>
+          <div class='five'><div class='slice'></div></div>
         </div>
         
-        <div class='short-timer'>          
+        <div class='short-timer' data-min='10'>          
           <span class='number-ten'>10</span>
-          <div class='ten' data-min='10'><div class='slice'></div></div>
+          <div class='ten'><div class='slice'></div></div>
         </div>
         
-        <div class='short-timer'>
+        <div class='short-timer' data-min='15'>
           <span class='number-fifteen'>15</span>
-          <div class='fifteen' data-min='15'><div class='slice'></div></div>
+          <div class='fifteen'><div class='slice'></div></div>
         </div>
         
         <div id='minute-hand'></div>
@@ -607,7 +601,8 @@
     </div>
     
     <div style='position:absolute;bottom:2px;left:0;right:0;text-align:center;'>
-      <a href='http://github.com/drwrchrds/pairing_timer'>source code</a> - 
+      <a href='https://github.com/drwrchrds/pairing_timer/tree/gh-pages'>
+        source code</a> - 
       by andrew richards <a href='http://www.drwrchrds.com'>site</a> 
       <a href='http://twitter.com/drwrchrds'>@drwrchrds</a>
       <a href='http://github.com/drwrchrds'>github</a> 
@@ -625,13 +620,20 @@
         
         this.lastTip = null;
         this.started = false;
-        this.$resetButton.addClass('disabled');
+        this.setUpEvents();
       }
       
-      Timer.prototype.bindjQueryEvents = function () {
+      Timer.prototype.setUpEvents = function () {
+        this.$startButton.off();this.$resetButton.off();this.$shortTimer.off();
+        this.$startButton.removeClass('started');
+        
         this.$startButton.one('click', this.longTimer.bind(this));
         this.$resetButton.on('click', this.resetTimer.bind(this));
-        this.$shortTimer.on('click', this.shortTimer.bind(this));
+        this.$shortTimer.on('click', this.shortTimer.bind(this));  
+        
+        this.updateSecondHand(0);
+        this.updateMinuteHand(0);
+        this.updateDisplay(0);      
       }
       
       // var oneSecondInterval;
@@ -649,8 +651,6 @@
           this.$startButton.addClass('started');
           this.$startButton.off('click');
           this.$startButton.one('click', this.pauseTimer.bind(this));
-          
-          this.$resetButton.removeClass('disabled');
           
           var timer = this;
           this.oneSecondInterval = setInterval(function() {
@@ -672,7 +672,8 @@
       Timer.prototype.dingDingDing = function() {
         clearInterval(this.oneSecondInterval);
         alert("Time's Up!"); 
-        this.resetButton.addClass('disabled');
+        
+        this.setUpEvents();
       }
 
       Timer.prototype.pauseTimer = function () {
@@ -737,8 +738,8 @@
       };
       
       Timer.prototype.shortTimer = function (event) {
-        var minutes = $(event.currentTarget).children('div')
-              .first().data('min');
+        var minutes = $(event.currentTarget).data('min');
+        
         switch(minutes) {
         case 5:
           var tenMinutesIn = new Date(new Date().getTime() - 10 * 60000);
@@ -774,10 +775,9 @@
         // add 'num' attribute to all tips
         $('.tip').each(function(idx, tip) {
           $(tip).attr('num', idx + 1);
-        })
+        });
         
-        var timer = new Timer();
-        timer.bindjQueryEvents();
+        new Timer();
       })
     </script>
   </body>
