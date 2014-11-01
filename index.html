@@ -254,6 +254,7 @@
         top:50%;
         color: black;
         font-size: 1.6em;
+        font-weight: 100;
         background-color: white;
         height:120px;
         width: 120px;
@@ -280,12 +281,31 @@
       
       .start {
         left: 15%;
+        color: green;
       }
       
+      .start.started {
+        color: tomato;
+      }
+      
+      .start:after {
+        content: 'Start';
+      }
+
+      .start.started:after {
+        content: 'Stop';
+      }
+
       .reset {
         right: 15%;
       }
-      
+
+      .reset.disabled {
+        color: grey;
+        pointer-events: none;
+        background-color: lightgrey;
+      }
+
       button { outline: none; }
       /* end button styling */
       
@@ -412,8 +432,8 @@
     
     <div class='clockface'>
       
-      <button class='start'>START</button>
-      <button class='reset'>RESET</button>
+      <button class='start'></button>
+      <button class='reset disabled'>Reset</button>
       
       <div class='middle-dot'></div>
       <div class='three'></div>
@@ -424,7 +444,7 @@
       <div class='inlay'>
         
         <div class='short-timer'>
-          <span class='number-five'>5</span>
+          <span class='number-five'>15</span>
           <div class='five' data-min='5'><div class='slice'></div></div>
         </div>
         
@@ -434,7 +454,7 @@
         </div>
         
         <div class='short-timer'>
-          <span class='number-fifteen'>15</span>
+          <span class='number-fifteen'>5</span>
           <div class='fifteen' data-min='15'><div class='slice'></div></div>
         </div>
         
@@ -587,121 +607,177 @@
     </div>
     
     <div style='position:absolute;bottom:2px;left:0;right:0;text-align:center;'>
+      <a href='http://github.com/drwrchrds/pairing_timer'>source code</a> - 
       by andrew richards <a href='http://www.drwrchrds.com'>site</a> 
       <a href='http://twitter.com/drwrchrds'>@drwrchrds</a>
       <a href='http://github.com/drwrchrds'>github</a> 
     </div>
     
     <script>
-      var fifteenMinTimeout, oneSecondInterval, started = false;
+      var Timer = function() {
+        this.$title = $('title');
+        this.$minuteHand = $('#minute-hand');
+        this.$secondHand = $('#second-hand');
+        
+        this.$startButton = $('.start');
+        this.$resetButton = $('.reset');
+        this.$shortTimer = $('.short-timer');
+        
+        this.lastTip = null;
+        this.started = false;
+        this.$resetButton.addClass('disabled');
+      }
       
-      var startTimer = function(start, reset) {
-        if(!started || reset) {
-          if(typeof oneSecondInterval !== 'undefined') {
-            clearInterval(oneSecondInterval);
+      Timer.prototype.bindjQueryEvents = function () {
+        this.$startButton.one('click', this.longTimer.bind(this));
+        this.$resetButton.on('click', this.resetTimer.bind(this));
+        this.$shortTimer.on('click', this.shortTimer.bind(this));
+      }
+      
+      // var oneSecondInterval;
+      
+      Timer.prototype.startTimer = function (startTime, reset) {
+        console.log('startTimer');
+        if(!this.started || reset) {
+          if(typeof this.oneSecondInterval !== 'undefined') {
+            clearInterval(this.oneSecondInterval);
           }
           
-          started = true
+          this.started = true;
+          this.startTime = startTime;
           
-          showRandomTip();
+          this.$startButton.addClass('started');
+          this.$startButton.off('click');
+          this.$startButton.one('click', this.pauseTimer.bind(this));
           
-          $title = $('title');
-          $secondHand = $('#second-hand');
-          $minuteHand = $('#minute-hand');
-        
-          oneSecondInterval = setInterval(function() {
+          this.$resetButton.removeClass('disabled');
+          
+          var timer = this;
+          this.oneSecondInterval = setInterval(function() {
             var now = new Date();
-            var seconds = parseInt((now - start)/1000);
+            var seconds = parseInt((now - timer.startTime)/1000);
             
-            updateSecondHand(seconds);
-            updateMinuteHand(seconds);
-            updateDisplay(seconds);  
+            timer.updateSecondHand(seconds);
+            timer.updateMinuteHand(seconds);
+            timer.updateDisplay(seconds);  
             
             if(seconds >= 900) {
-              clearInterval(oneSecondInterval);
-              alert("Time's Up!");     
+              timer.dingDingDing()
+    
             }
           }, 300);
         }
       };
+
+      Timer.prototype.dingDingDing = function() {
+        clearInterval(this.oneSecondInterval);
+        alert("Time's Up!"); 
+        this.resetButton.addClass('disabled');
+      }
+
+      Timer.prototype.pauseTimer = function () {
+        console.log('pauseTimer');
+        this.$startButton.removeClass('started');
+        this.started = false;
+        
+        clearInterval(this.oneSecondInterval);
+        
+        var timeElapsed = new Date() - this.startTime;
+        // var fiveMinutesIn = new Date(new Date().getTime() - 10 * 60000)
+
+        var timer = this;
+        this.$startButton.one('click', function(){
+          var nextStartTime = new Date(new Date().getTime() - timeElapsed);
+          timer.startTimer(nextStartTime);
+        });
+        
+        // clear interval
+        // store time-elapsed
+        // make a call back that will call startTimer with time elapsed
+      }
       
-      var updateDisplay = function(seconds) {
+      Timer.prototype.updateDisplay = function (seconds) {
         var secDisplay = seconds % 60;
         var minDisplay = parseInt(seconds / 60);
         secDisplay = secDisplay < 10 ? '0' + secDisplay : secDisplay;
         minDisplay = minDisplay < 10 ? '0' + minDisplay : minDisplay;
         
-        $title.text(minDisplay + ':' + secDisplay);
+        this.$title.text(minDisplay + ':' + secDisplay);
       };
       
-      var updateSecondHand = function(seconds) {
-        $secondHand.css('transform', 'rotateZ(' + (seconds * 6) + 'deg)')
-        $secondHand.css('-webkit-transform', 'rotateZ(' + (seconds * 6) + 'deg)')
+      Timer.prototype.updateSecondHand = function (seconds) {
+        this.$secondHand.css('transform', 
+              'rotateZ(' + (seconds * 6) + 'deg)');
+        this.$secondHand.css('-webkit-transform', 
+              'rotateZ(' + (seconds * 6) + 'deg)');
       };
       
-      var updateMinuteHand = function(seconds) {
-        $minuteHand.css('transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
-        $minuteHand.css('-webkit-transform', 'rotateZ(' + (seconds * 0.4) + 'deg)')
+      Timer.prototype.updateMinuteHand = function (seconds) {
+        this.$minuteHand.css('transform', 
+              'rotateZ(' + (seconds * 0.4) + 'deg)');
+        this.$minuteHand.css('-webkit-transform', 
+              'rotateZ(' + (seconds * 0.4) + 'deg)');
       };
       
-      var longTimer = function() {
-        startTimer(new Date(), false);
+      Timer.prototype.longTimer = function () {
+        this.startTimer(new Date(), false);
+        this.showRandomTip();
       };
       
-      var resetTimer = function() {
-        if(started) {
-          clearInterval(oneSecondInterval);
-          
-          updateSecondHand(0);
-          updateMinuteHand(0);
-          updateDisplay(0);
-          
-          startTimer(new Date(), true);
-        }
+      Timer.prototype.resetTimer = function () {
+        this.oneSecondInterval && 
+              clearInterval(this.oneSecondInterval);
+        
+        this.updateSecondHand(0);
+        this.updateMinuteHand(0);
+        this.updateDisplay(0);
+        
+        this.startTimer(new Date(), true);
+        this.showRandomTip();
       };
       
-      var shortTimer = function(event) {
+      Timer.prototype.shortTimer = function (event) {
         var minutes = $(event.currentTarget).children('div')
               .first().data('min');
         switch(minutes) {
         case 5:
           var tenMinutesIn = new Date(new Date().getTime() - 10 * 60000);
-          startTimer(tenMinutesIn, true);
+          this.startTimer(tenMinutesIn, true);
           break;
         case 10:
           var fiveMinutesIn = new Date(new Date().getTime() - 5 * 60000);
-          startTimer(fiveMinutesIn, true);
+          this.startTimer(fiveMinutesIn, true);
           break;
         case 15:
-          startTimer(new Date(), true);
+          this.startTimer(new Date(), true);
           break;
         }
+        
+        this.showRandomTip();
       }
       
-      var lastTip;
-      var showRandomTip = function() {
+      Timer.prototype.showRandomTip = function () {
+        this.$tips = this.$tips || $('.tips');
+        this.numTips = this.numTips || this.$tips.children().length;
+        var randTip = Math.floor(Math.random() * this.numTips);
         
-        var $tips = $('.tips');
-        var numTips = $tips.children().length;
-        var randTip = Math.floor(Math.random() * numTips);
-        
-        if(randTip === lastTip) {
-          showRandomTip();
+        if(randTip === this.lastTip) {
+          this.showRandomTip();
         } else {          
-          $tips.css('top', (randTip * -100) + '%');
-          lastTip = randTip;
+          this.$tips.css('top', (randTip * -100) + '%');
+          this.lastTip = randTip;
         }
       }
       
-      $(function() {
+      $(function () {
         
+        // add 'num' attribute to all tips
         $('.tip').each(function(idx, tip) {
           $(tip).attr('num', idx + 1);
         })
         
-        $('.start').on('click', longTimer);
-        $('.reset').on('click', resetTimer);
-        $('.short-timer').on('click', shortTimer);
+        var timer = new Timer();
+        timer.bindjQueryEvents();
       })
     </script>
   </body>
