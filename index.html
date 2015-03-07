@@ -626,6 +626,7 @@
       Timer.prototype.setUpEvents = function () {
         this.$startButton.off();this.$resetButton.off();this.$shortTimer.off();
         this.$startButton.removeClass('started');
+        this.started = false;
         
         this.$startButton.one('click', this.longTimer.bind(this));
         this.$resetButton.on('click', this.resetTimer.bind(this));
